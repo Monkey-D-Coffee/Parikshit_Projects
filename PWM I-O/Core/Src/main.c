@@ -44,7 +44,8 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN PV */
-
+uint32_t IC_Value = 0, Measured_Frequency = 0; //Declaring Global variable
+double Measured_DutyCycle = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,16 +59,13 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint32_t IC_Value = 0, Measured_Frequency = 0; //Declaring Global variable
-float Measured_DutyCycle = 0;
-
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 	if(htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1){	//If INTR is by channel 1
 		IC_Value = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1);
 
 		if(IC_Value !=0){
 			//calculate the Duty Cycle
-			Measured_DutyCycle = (HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_1)*100)/IC_Value;
+			Measured_DutyCycle = (double)HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_2)*100/IC_Value;
 			Measured_Frequency = 80000000/IC_Value;
 		}
 	}
